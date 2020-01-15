@@ -25,7 +25,7 @@ void setup() {
   //frameRate(120);
   size(500, 500, P3D);
   smooth();
-
+  myRemoteLocation = new NetAddress("127.0.0.1",8000);
   myClient = new Client(this, "192.168.1.77", 80);
   oscP5 = new OscP5(this, 12000);
 
@@ -43,7 +43,7 @@ void draw() {
   //println(" X= "+magX+" Y= "+magY+" Z= "+magZ);
   //println(" aX= "+accelX+" aY= "+accelY+" aZ= "+accelZ);
   //println( " calibrated Z : " + resetAccZ);
-
+  
   background(0);
   pushMatrix();
   translate(width/2, height/2);
@@ -58,13 +58,12 @@ void draw() {
   int multiplicator = 100;
   stroke(255, 0, 0);
   strokeWeight(5);
-  //line(
-  line(width/2, height/2, 0, accelX*multiplicator, accelY*multiplicator, accelZ*multiplicator);
   fill(255, 0, 0);
   noStroke();
   rect(width/2, 20, (accelZ-resetAccZ)*100, 10);
   calibration();
   directionRotZ();
+  oscHandler();
 }
 
 int calibrationCount=0;
@@ -127,3 +126,13 @@ void readClient() {
     }
   }
 }
+
+  void oscHandler(){
+      OscMessage myMessage = new OscMessage("/magX");
+  
+  myMessage.add(magX); /* add an int to the osc message */
+
+  /* send the message */
+  oscP5.send(myMessage, myRemoteLocation);
+  
+  }
