@@ -6,7 +6,14 @@
 #include <MPU9250.h>
 
 MPU9250 IMU(Wire,0x68);
-int status;
+int SENSORstatus;
+
+///////please enter your sensitive data in the Secret tab/arduino_secrets.h
+char ssid[] = SECRET_SSID;        // your network SSID (name)
+char pass[] = SECRET_PASS;    // your network password (use for WPA, or use as key for WEP)
+int WIFIstatus = WL_IDLE_STATUS;     // the WiFi radio's status
+
+WiFiServer server(80); // define server
 
 
 
@@ -16,14 +23,39 @@ void setup() {
   while(!Serial) {}
 
   // start communication with IMU 
-  status = IMU.begin();
-  if (status < 0) {
+  SENSORstatus = IMU.begin();
+  if (SENSORstatus < 0) {
     Serial.println("IMU initialization unsuccessful");
     Serial.println("Check IMU wiring or try cycling power");
     Serial.print("Status: ");
-    Serial.println(status);
+    Serial.println(SENSORstatus);
     while(1) {}
   }
+//---------------------------------------------
+// check for the presence of the shield:
+  if (WiFi.status() == WL_NO_SHIELD) {
+    Serial.println("WiFi shield not present");
+    // don't continue:
+    while (true);
+  }
+    // attempt to connect to WiFi network:
+  while ( WIFIstatus != WL_CONNECTED) {
+    Serial.print("Attempting to connect to WPA SSID: ");
+    Serial.println(ssid);
+    // Connect to WPA/WPA2 network:
+    WIFIstatus = WiFi.begin(ssid, pass);
+
+    // wait 10 seconds for connection:
+    delay(500);
+  }
+  /* you're connected now, so print out the data: */
+  server.begin();           /* start server at port 888 */
+  Serial.print("You're connected to the network");
+  printCurrentNet();
+
+  printWiFiData();
+  delay(5000);
+  
 }
 
 
@@ -31,7 +63,59 @@ void setup() {
 void loop() {
   IMU.readSensor();
 
-
-
     delay(100); //check with WIFI communication
+}
+
+
+void printCurrentNet() {
+  // print the SSID of the network you're attached to:
+  Serial.print("SSID: ");
+  Serial.println(WiFi.SSID());
+  IPAddress ip = WiFi.localIP();
+  Serial.print("IP Address: ");
+  Serial.println(ip);
+  // print the MAC address of the router you're attached to:
+  byte bssid[6];
+  WiFi.BSSID(bssid);
+  Serial.print("BSSID: ");
+  printMacAddress(bssid);
+
+  // print the received signal strength:
+  long rssi = WiFi.RSSI();
+  Serial.print("signal strength (RSSI):");
+  Serial.println(rssi);
+
+  // print the encryption type:
+  byte encryption = WiFi.encryptionType();
+  Serial.print("Encryption Type:");
+  Serial.println(encryption, HEX);
+  Serial.println();
+}
+
+void printWiFiData() {
+  // print your WiFi shield's IP address:
+  IPAddress ip = WiFi.localIP();
+  Serial.print("IP Address: ");
+  Serial.println(ip);
+  Serial.println(ip);
+
+  // print your MAC address:
+  byte mac[6];
+  WiFi.macAddress(mac);
+  Serial.print("MAC address: ");
+  printMacAddress(mac);
+
+}
+
+void printMacAddress(byte mac[]) {
+  for (int i = 5; i >= 0; i--) {
+    if (mac[i] < 16) {
+      Serial.print("0");
+    }
+    Serial.print(mac[i], HEX);
+    if (i > 0) {
+      Serial.print(":");
+    }
+  }
+  Serial.println();
 }
