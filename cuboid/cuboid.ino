@@ -1,3 +1,5 @@
+#include "arduino_secrets.h"
+
 
 #include <SPI.h>
 #include <WiFi101.h>
@@ -5,6 +7,8 @@
 
 MPU9250 IMU(Wire,0x68);
 int status;
+
+
 
 void setup() {
   // serial to display data
@@ -23,7 +27,7 @@ void setup() {
 }
 
 
-hallo andi
+
 void loop() {
   IMU.readSensor();
 
