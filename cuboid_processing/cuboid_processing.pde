@@ -10,6 +10,14 @@ byte [] byteBuffer = new byte[64];
 byte interesting = byte('!');
 float [] valF;
 
+float TmagX;
+float TmagY;
+float TmagZ;
+
+float TaccelX;
+float TaccelY;
+float TaccelZ;
+
 float magX;
 float magY;
 float magZ;
@@ -40,9 +48,7 @@ void setup() {
 
 void draw() {
   readClient();
-  //println(" X= "+magX+" Y= "+magY+" Z= "+magZ);
-  //println(" aX= "+accelX+" aY= "+accelY+" aZ= "+accelZ);
-  //println( " calibrated Z : " + resetAccZ);
+  getCalibratedValues();
   
   background(0);
   pushMatrix();
@@ -60,22 +66,34 @@ void draw() {
   strokeWeight(5);
   fill(255, 0, 0);
   noStroke();
-  rect(width/2, 20, (accelZ-resetAccZ)*100, 10);
+  rect(width/2, 20, accelZ*100, 10);
   calibration();
   directionRotZ();
   oscHandler();
 }
 
 int calibrationCount=0;
+
+float resetAccX;
+float resetAccY;
 float resetAccZ;
+float resetMagX;
+float resetMagY;
+float resetMagZ;
 boolean calibratedFlag=false;
 void calibration() {
   if (calibrationCount<60) {
     calibrationCount++;
   } else {
     if (!calibratedFlag) {
-
+      
+      resetAccX=accelX;
+      resetAccY=accelY;
       resetAccZ=accelZ;
+      resetMagX=magX;
+      resetMagY=magY;
+      resetMagZ=magZ;
+
       calibratedFlag=true;
     }
   }
@@ -111,13 +129,13 @@ void readClient() {
         for (int i=0; i < list.length; i ++) {
           list[i]=list[i].replaceAll("!", "");
           if (list.length==6) {
-            magX=float(list[0]); // magnetometer.x
-            magY=float(list[1]); // magnetometer.y
-            magZ=float(list[2]); // magnetometer.z
+            TmagX=float(list[0]); // magnetometer.x
+            TmagY=float(list[1]); // magnetometer.y
+            TmagZ=float(list[2]); // magnetometer.z
 
-            accelX=float(list[3]); // accel.x
-            accelY=float(list[4]); // accel.y
-            accelZ=float(list[5]); // accel.z
+            TaccelX=float(list[3]); // accel.x
+            TaccelY=float(list[4]); // accel.y
+            TaccelZ=float(list[5]); // accel.z
             //valF[3]=float(list[3]); // cap sensing value
             // valF[4]=float(list[4]); ... and so on
           }
@@ -136,3 +154,14 @@ void readClient() {
   oscP5.send(myMessage, myRemoteLocation);
   
   }
+  
+   void getCalibratedValues(){
+       magX = TmagX - resetMagX;
+       magY = TmagY - resetMagY;
+       magZ = TmagZ - resetMagZ;
+       
+       accelX = TaccelX - resetAccX;
+       accelY = TaccelY - resetAccX;
+       accelZ = TaccelZ - resetAccZ;
+   }
+  
