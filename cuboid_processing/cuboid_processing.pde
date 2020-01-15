@@ -53,23 +53,30 @@ void draw() {
   background(0);
   pushMatrix();
   translate(width/2, height/2);
-  //rotateX(radians(map(magX,-2,2,0,360)));
-  //rotateY(radians(map(magY,-2,2,0,360)));
-  rotateZ(radians(map(magZ, -10, 10, 0, 180)));
-  stroke(0);
+  pushMatrix();
+  //rotateZ(radians(map(magZ, -10, 10, 0, 180)));
+  //rotateX(radians(map(magX, -10, 10, 0, 180)));
+  //rotateY(radians(map(magY, 10, -10, 0, 180)));
+  stroke(255);
   strokeWeight(1);
-  fill(255);
+  //fill(255);
+  noFill();
   box(200);
   popMatrix();
-  int multiplicator = 100;
+  stroke(255,0,0);
+  strokeWeight(5);
+  line(0,0,0,accelX*100,accelY*100,accelZ*100);
+  popMatrix();
   stroke(255, 0, 0);
   strokeWeight(5);
   fill(255, 0, 0);
   noStroke();
   rect(width/2, 20, accelZ*100, 10);
+  
   calibration();
   directionRotZ();
   oscHandler();
+  delay(10);
 }
 
 int calibrationCount=0;
