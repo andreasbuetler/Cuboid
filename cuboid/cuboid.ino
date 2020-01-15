@@ -78,18 +78,14 @@ void loop() {
       client.print(IMU.getAccelY_mss());
       client.print(",");
       client.print(IMU.getAccelZ_mss());
-      //client.print(",");
-      client.println("!");
+      client.print(",");
 
-      Serial.print(IMU.getAccelX_mss());
-      Serial.print(IMU.getAccelY_mss());
-      Serial.print(IMU.getAccelZ_mss());
-//      client.print(IMU.getGyroX_rads());
-//      client.print(",");  
-//      client.print(IMU.getGyroY_rads());
-//      client.print(",");
-//      client.print(IMU.getGyroZ_rads());
-//      client.print(",");
+      client.print(IMU.getGyroX_rads());
+      client.print(",");  
+      client.print(IMU.getGyroY_rads());
+      client.print(",");
+      client.print(IMU.getGyroZ_rads());
+      //client.print(",");
 //
 //      client.print(IMU.getMagX_uT());
 //      client.print(",");  
@@ -97,7 +93,7 @@ void loop() {
 //      client.print(",");
 //      client.print(IMU.getMagZ_uT());
 //      
-//      client.println("!");
+      client.println("!");
 
 
 
