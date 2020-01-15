@@ -5,7 +5,7 @@
 #include <WiFi101.h>
 #include <MPU9250.h>
 
-MPU9250 IMU(Wire,0x68);
+MPU9250 IMU(Wire, 0x68);
 int SENSORstatus;
 
 ///////please enter your sensitive data in the Secret tab/arduino_secrets.h
@@ -20,25 +20,25 @@ WiFiServer server(80); // define server
 void setup() {
   // serial to display data
   Serial.begin(115200);
-  while(!Serial) {}
+  while (!Serial) {}
 
-  // start communication with IMU 
+  // start communication with IMU
   SENSORstatus = IMU.begin();
   if (SENSORstatus < 0) {
     Serial.println("IMU initialization unsuccessful");
     Serial.println("Check IMU wiring or try cycling power");
     Serial.print("Status: ");
     Serial.println(SENSORstatus);
-    while(1) {}
+    while (1) {}
   }
-//---------------------------------------------
-// check for the presence of the shield:
+  //---------------------------------------------
+  // check for the presence of the shield:
   if (WiFi.status() == WL_NO_SHIELD) {
     Serial.println("WiFi shield not present");
     // don't continue:
     while (true);
   }
-    // attempt to connect to WiFi network:
+  // attempt to connect to WiFi network:
   while ( WIFIstatus != WL_CONNECTED) {
     Serial.print("Attempting to connect to WPA SSID: ");
     Serial.println(ssid);
@@ -55,7 +55,7 @@ void setup() {
 
   printWiFiData();
   delay(5000);
-  
+
 }
 
 
@@ -63,7 +63,39 @@ void setup() {
 void loop() {
   IMU.readSensor();
 
-    delay(100); //check with WIFI communication
+  //int testVal = 0;
+  WiFiClient client = server.available();
+  if (client) {
+    //    cs_4_8.set_CS_AutocaL_Millis(0xFFFFFFFF);
+    Serial.println("new client connected !!!!!");
+    //String currentLine = "";
+    while (client.connected()) {
+      //      client.print(event.magnetic.x);
+      //      client.print(",");
+      //      client.print(event.magnetic.y);
+      //      client.print(",");
+      //      client.print(event.magnetic.z);
+      //      client.print(",");
+      //      client.print(totCS);
+      ////      client.print(",");
+      ////      client.print(anotherValue); // another value and so on...
+      //      client.println("!");
+      delay(50);
+    }
+  } else {
+    //magnetometerRead();
+    //    capacitiveRead();
+  }
+  client.stop();
+  Serial.println("client disconnected");
+
+  /* check the network connection information once every 500 miliseconds: */
+
+
+  printCurrentNet();
+  delay(500);
+
+
 }
 
 
