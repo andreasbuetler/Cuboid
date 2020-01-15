@@ -72,26 +72,32 @@ void loop() {
     while (client.connected()) {
       IMU.readSensor();
       
+      //client.print("test");
       client.print(IMU.getAccelX_mss());
       client.print(",");  
       client.print(IMU.getAccelY_mss());
       client.print(",");
       client.print(IMU.getAccelZ_mss());
-      client.print(",");
+      //client.print(",");
+      client.println("!");
 
-      client.print(IMU.getGyroX_rads());
-      client.print(",");  
-      client.print(IMU.getGyroY_rads());
-      client.print(",");
-      client.print(IMU.getGyroZ_rads());
-      client.print(",");
-
-      client.print(IMU.getMagX_uT());
-      client.print(",");  
-      client.print(IMU.getMagY_uT());
-      client.print(",");
-      client.print(IMU.getMagZ_uT());
-      client.print(",");
+      Serial.print(IMU.getAccelX_mss());
+      Serial.print(IMU.getAccelY_mss());
+      Serial.print(IMU.getAccelZ_mss());
+//      client.print(IMU.getGyroX_rads());
+//      client.print(",");  
+//      client.print(IMU.getGyroY_rads());
+//      client.print(",");
+//      client.print(IMU.getGyroZ_rads());
+//      client.print(",");
+//
+//      client.print(IMU.getMagX_uT());
+//      client.print(",");  
+//      client.print(IMU.getMagY_uT());
+//      client.print(",");
+//      client.print(IMU.getMagZ_uT());
+//      
+//      client.println("!");
 
 
 
