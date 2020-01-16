@@ -10,6 +10,10 @@ byte [] byteBuffer = new byte[64];
 byte interesting = byte('!');
 float [] valF;
 
+int state = 0;
+
+int batteryLevel = 0;
+
 float TmagX;
 float TmagY;
 float TmagZ;
@@ -33,7 +37,7 @@ void setup() {
   //frameRate(120);
   size(500, 500, P3D);
   smooth();
-  myRemoteLocation = new NetAddress("127.0.0.1",8000);
+  myRemoteLocation = new NetAddress("127.0.0.1", 8000);
   myClient = new Client(this, "192.168.1.77", 80);
   oscP5 = new OscP5(this, 12000);
 
@@ -48,34 +52,22 @@ void setup() {
 
 void draw() {
   readClient();
-  getCalibratedValues();
-  
-  background(0);
-  pushMatrix();
-  translate(width/2, height/2);
-  pushMatrix();
-  //rotateZ(radians(map(magZ, -10, 10, 0, 180)));
-  //rotateX(radians(map(magX, -10, 10, 0, 180)));
-  //rotateY(radians(map(magY, 10, -10, 0, 180)));
-  stroke(255);
-  strokeWeight(1);
-  //fill(255);
-  noFill();
-  box(200);
-  popMatrix();
-  stroke(255,0,0);
-  strokeWeight(5);
-  line(0,0,0,accelX*100,accelY*100,accelZ*100);
-  popMatrix();
-  stroke(255, 0, 0);
-  strokeWeight(5);
-  fill(255, 0, 0);
-  noStroke();
-  rect(width/2, 20, accelZ*100, 10);
-  
   calibration();
+  getCalibratedValues();
   directionRotZ();
   oscHandler();
+  
+  if(state==0){
+    noMovement();
+  }
+  if(state==0){
+    pickedUp();
+  }
+  if(state==0){
+  }
+  if(state==0){
+  }
+  Drawing();
   delay(10);
 }
 
@@ -93,7 +85,7 @@ void calibration() {
     calibrationCount++;
   } else {
     if (!calibratedFlag) {
-      
+
       resetAccX=accelX;
       resetAccY=accelY;
       resetAccZ=accelZ;
@@ -107,12 +99,12 @@ void calibration() {
 }
 float actualAccZ;
 String directionZ="";
-void directionRotZ(){
+void directionRotZ() {
   actualAccZ = accelZ-resetAccZ;
-  if(actualAccZ <0 ){
-  directionZ ="Left";
-  }else{
-  directionZ="right";
+  if (actualAccZ <0 ) {
+    directionZ ="Left";
+  } else {
+    directionZ="right";
   }
   println(directionZ);
 }
@@ -152,23 +144,57 @@ void readClient() {
   }
 }
 
-  void oscHandler(){
-      OscMessage myMessage = new OscMessage("/magX");
-  
-  myMessage.add(magX); /* add an int to the osc message */
+void oscHandler() {
+  OscMessage value1 = new OscMessage("/value1");
+  OscMessage value2 = new OscMessage("/value2");
+  OscMessage value3 = new OscMessage("/value3");
+  OscMessage value4 = new OscMessage("/value4");
+
+  value1.add(magX); /* add an int to the osc message */
+  value2.add(magX);
+  value3.add(magX);
+  value4.add(magX);
 
   /* send the message */
-  oscP5.send(myMessage, myRemoteLocation);
+  oscP5.send(value1, myRemoteLocation);
+  oscP5.send(value2, myRemoteLocation);
+  oscP5.send(value3, myRemoteLocation);
+  oscP5.send(value4, myRemoteLocation);
+}
+
+void getCalibratedValues() {
+  magX = TmagX - resetMagX;
+  magY = TmagY - resetMagY;
+  magZ = TmagZ - resetMagZ;
+
+  accelX = TaccelX - resetAccX;
+  accelY = TaccelY - resetAccX;
+  accelZ = TaccelZ - resetAccZ;
+}
+
+void Drawing(){
+   background(0);
+  pushMatrix();
+  translate(width/2, height/2);
+  pushMatrix();
+  //rotateZ(radians(map(magZ, -10, 10, 0, 180)));
+  //rotateX(radians(map(magX, -10, 10, 0, 180)));
+  //rotateY(radians(map(magY, 10, -10, 0, 180)));
+  stroke(255);
+  strokeWeight(1);
+  //fill(255);
+  noFill();
+  box(200);
+  popMatrix();
+  stroke(255, 0, 0);
+  strokeWeight(5);
+  line(0, 0, 0, accelX*100, accelY*100, accelZ*100);
+  popMatrix();
+  stroke(255, 0, 0);
+  strokeWeight(5);
+  fill(255, 0, 0);
+  noStroke();
+  rect(width/2, 20, accelZ*100, 10);
+
   
-  }
-  
-   void getCalibratedValues(){
-       magX = TmagX - resetMagX;
-       magY = TmagY - resetMagY;
-       magZ = TmagZ - resetMagZ;
-       
-       accelX = TaccelX - resetAccX;
-       accelY = TaccelY - resetAccX;
-       accelZ = TaccelZ - resetAccZ;
-   }
-  
+}
