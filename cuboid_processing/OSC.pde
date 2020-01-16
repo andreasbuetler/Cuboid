@@ -8,7 +8,7 @@ void oscHandler() {
 
 
 
-  value1.add(map(batteryLevel, 0, maxBatteryLevel, 0, 1)); /* add an int to the osc message */
+  value1.add(constrain(map(batteryLevel, 0, maxBatteryLevel, 0, 1),0,maxBatteryLevel)); /* add an int to the osc message */
   value2.add(charging);
   value3.add(shoot);
   value4.add(impact);
@@ -17,7 +17,7 @@ void oscHandler() {
   delay(10);
    oscP5.send(value2, myRemoteLocation);
      delay(10);
-  oscP5.send(value3, myRemoteLocation);
+  //oscP5.send(value3, myRemoteLocation);
     delay(10);
-  oscP5.send(value4, myRemoteLocation);
+  //oscP5.send(value4, myRemoteLocation);
 }

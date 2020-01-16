@@ -1,4 +1,4 @@
-float maxBatteryLevel = 1000;
+float maxBatteryLevel = 100;
 float shootThreshold = 3;
 float accelerationValue;
 boolean shoot = false;
@@ -6,7 +6,8 @@ float batteryLevel = 0;
 boolean charging = false;
 boolean noMovement = true;
 boolean impact = false;
-float chargingThresholdLow = 0.0005;
+float chargingThresholdLow = 0.005;
+int chargingCounter = 5;
 
 //  void shootDetection() {
 //  if (accelerationValue >= shootThreshold) {
@@ -19,18 +20,21 @@ float chargingThresholdLow = 0.0005;
 
 void batteryLevel() {
   //println("batteryLevel()");
-  float decreaseValue = 1;
+  float decreaseValue = 0.1;
   if(!Float.isNaN(accelX)&&!Float.isNaN(accelY)&&!Float.isNaN(accelZ)){
-  accelerationValue = accelerationValue*0.7+abs(accelX*accelY*accelZ)*0.3;
+  //accelerationValue = accelerationValue*0.7+abs(accelX*accelY*accelZ)*0.3;
+  accelerationValue = abs(accelX*accelY*accelZ);
   }
   if (!Float.isNaN(accelerationValue)&&accelerationValue<=maxBatteryLevel) {
-
+     if(batteryLevel < 100){
     batteryLevel = batteryLevel + accelerationValue;
-    //println(batteryLevel);
+    
+     }
   }
   if (batteryLevel>1) {
     batteryLevel = batteryLevel - decreaseValue;
   }
+  println(batteryLevel);
 }
 
 void MovementDetection() {
@@ -38,6 +42,7 @@ void MovementDetection() {
     //println("AccValue:"+accelerationValue);
     //println(accelerationValue);
       if (accelerationValue>shootThreshold) {
+      
     charging = false;
     shoot = true;
     //println(shoot);
@@ -45,7 +50,7 @@ void MovementDetection() {
     noMovement = false;
     //impact();
     //reset Chanrging Value
-    batteryLevel = 0;
+    //batteryLevel = 0;
     //oscHandler();
   }else{
     shoot = false;
@@ -62,7 +67,13 @@ void MovementDetection() {
 
   if (accelerationValue>chargingThresholdLow&&accelerationValue<shootThreshold) {
     println("CHARGING");
+    if (chargingCounter<7){
+      charging = false;
+      chargingCounter++;
+    }else{
     charging = true;
+    chargingCounter = 0;
+    }
     shoot = false;
     noMovement = false;
     impact = false;
