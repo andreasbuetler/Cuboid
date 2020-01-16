@@ -43,6 +43,7 @@ void setup() {
   //frameRate(120);
   size(500, 500, P3D);
   smooth();
+  
   myRemoteLocation = new NetAddress("127.0.0.1",8000);
   myClient = new Client(this, "192.168.1.77", 80);
   oscP5 = new OscP5(this, 12000);
@@ -60,10 +61,12 @@ void draw() {
   readClient();
   getCalibratedValues();
   //printAllValues();
-  visualization();
-  batteryCharging();
-  
+  //visualization();
+  batteryLevel();
+  gyroVisualization();
+
   calibration();
+  
   directionRotZ();
   oscHandler();
   delay(10);
@@ -178,18 +181,18 @@ void readClient() {
    }
    
    void printAllValues(){
-     println("Magnetometer: "+"X = "+TmagX+"Y = "+TmagY+"Z = "+TmagZ);
-     println("Acceleration: "+"X = "+TaccelX+"Y = "+TaccelY+"Z = "+TaccelZ);
-     println("Gyro: "+"X = "+TgyroX+"Y = "+TgyroY+"Z = "+TgyroZ);
+     println("Magnetometer: "+"\t"+"X = "+TmagX+"\t"+"Y = "+TmagY+"\t"+"Z = "+TmagZ);
+     println("Acceleration: "+"\t"+"X = "+TaccelX+"\t"+"Y = "+TaccelY+"\t"+"Z = "+TaccelZ);
+     println("Gyro: "+"\t\t"+"X = "+TgyroX+"\t"+"Y = "+TgyroY+"\t"+"Z = "+TgyroZ);
    
    }
    
-   void batteryCharging(){
+   void batteryLevel(){
      float decreaseValue = 1;
      float accelerationValue = abs(accelX*accelY*accelZ);
      if(!Float.isNaN(accelerationValue)){
     batteryLevel = batteryLevel + accelerationValue;
-     println(batteryLevel);
+     //println(batteryLevel);
      }
      if(batteryLevel>1){
      batteryLevel = batteryLevel - decreaseValue;
@@ -198,7 +201,7 @@ void readClient() {
    }
    
    void visualization(){
-       background(0);
+   
   pushMatrix();
   translate(width/2, height/2);
   pushMatrix();
@@ -222,4 +225,39 @@ void readClient() {
   rect(width/2, 20, accelZ*100, 10);
    }
    
+  void gyroVisualization(){
+    background(20);
+    int circleSize = 300;
+    
+    pushMatrix();
+    
+    noFill();
+    translate(width/2,height/2);
+    
+    pushMatrix();
+    rotateZ(radians(map(gyroZ, -10, 10, 0, 180)));
+    //rotateX(radians(map(magX, -10, 10, 0, 180)));
+    //rotateY(radians(map(magY, -10, 10, 0, 180)));
+    
+    stroke(255,0,0);
+    ellipse(0,0,circleSize,circleSize);
+    line(0,circleSize/2,0,0);
+    pushMatrix();
+    stroke(255,255,0);
+    rotateX(radians(90));
+    ellipse(0,0,circleSize,circleSize);
+    line(0,circleSize/2,0,0);
+    popMatrix();
+    pushMatrix();
+    stroke(0,255,0);
+    rotateY(radians(90));
+    ellipse(0,0,circleSize,circleSize);
+    line(0,circleSize/2,0,0);
+    popMatrix();
+    popMatrix();
+    popMatrix();
+    
+    
+  }
+  
   
