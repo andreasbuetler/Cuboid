@@ -10,12 +10,6 @@ byte [] byteBuffer = new byte[64];
 byte interesting = byte('!');
 float [] valF;
 
-float maxBatteryLevel = 1000;
-float shootThreshold = 3;
-float accelerationValue;
-boolean shoot = false;
-
-float batteryLevel = 0;
 
 
 
@@ -24,8 +18,8 @@ boolean clientConnected = false;
 void setup() {
   //size(600, 640,FX2D); 
   //frameRate(120);
-  size(500, 500, P3D);
-  smooth();
+  size(500, 500);
+  //smooth();
 
   myRemoteLocation = new NetAddress("127.0.0.1", 8000);
   myClient = new Client(this, "192.168.1.77", 80);
@@ -42,15 +36,16 @@ void setup() {
 
 void draw() {
   readClient();
+
   getCalibratedValues();
   //printAllValues();
   //visualization();
   batteryLevel();
-  gyroVisualization();
-  shootDetection();
-  calibration();
+  //gyroVisualization();
+  MovementDetection();
+  //calibration();
 
   //directionRotZ();
   oscHandler();
-  delay(10);
+  delay(50);
 }
