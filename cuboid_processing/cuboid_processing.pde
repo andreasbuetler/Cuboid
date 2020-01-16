@@ -10,6 +10,8 @@ byte [] byteBuffer = new byte[64];
 byte interesting = byte('!');
 float [] valF;
 
+float batteryLevel = 0;
+
 float TmagX;
 float TmagY;
 float TmagZ;
@@ -57,30 +59,9 @@ void setup() {
 void draw() {
   readClient();
   getCalibratedValues();
-  printAllValues();
-  
-  background(0);
-  pushMatrix();
-  translate(width/2, height/2);
-  pushMatrix();
-  //rotateZ(radians(map(magZ, -10, 10, 0, 180)));
-  //rotateX(radians(map(magX, -10, 10, 0, 180)));
-  //rotateY(radians(map(magY, 10, -10, 0, 180)));
-  stroke(255);
-  strokeWeight(1);
-  //fill(255);
-  noFill();
-  box(200);
-  popMatrix();
-  stroke(255,0,0);
-  strokeWeight(5);
-  line(0,0,0,accelX*100,accelY*100,accelZ*100);
-  popMatrix();
-  stroke(255, 0, 0);
-  strokeWeight(5);
-  fill(255, 0, 0);
-  noStroke();
-  rect(width/2, 20, accelZ*100, 10);
+  //printAllValues();
+  visualization();
+  batteryCharging();
   
   calibration();
   directionRotZ();
@@ -203,5 +184,42 @@ void readClient() {
    
    }
    
+   void batteryCharging(){
+     float decreaseValue = 1;
+     float accelerationValue = abs(accelX*accelY*accelZ);
+     if(!Float.isNaN(accelerationValue)){
+    batteryLevel = batteryLevel + accelerationValue;
+     println(batteryLevel);
+     }
+     if(batteryLevel>1){
+     batteryLevel = batteryLevel - decreaseValue;
+     }
+     
+   }
+   
+   void visualization(){
+       background(0);
+  pushMatrix();
+  translate(width/2, height/2);
+  pushMatrix();
+  //rotateZ(radians(map(magZ, -10, 10, 0, 180)));
+  //rotateX(radians(map(magX, -10, 10, 0, 180)));
+  //rotateY(radians(map(magY, 10, -10, 0, 180)));
+  stroke(255);
+  strokeWeight(1);
+  //fill(255);
+  noFill();
+  box(200);
+  popMatrix();
+  stroke(255,0,0);
+  strokeWeight(5);
+  line(0,0,0,accelX*100,accelY*100,accelZ*100);
+  popMatrix();
+  stroke(255, 0, 0);
+  strokeWeight(5);
+  fill(255, 0, 0);
+  noStroke();
+  rect(width/2, 20, accelZ*100, 10);
+   }
    
   
