@@ -97,19 +97,6 @@ void loop() {
       client.println("!");
 
 
-
-
-      
-      //      client.print(event.magnetic.x);
-      //      client.print(",");
-      //      client.print(event.magnetic.y);
-      //      client.print(",");
-      //      client.print(event.magnetic.z);
-      //      client.print(",");
-      //      client.print(totCS);
-      ////      client.print(",");
-      ////      client.print(anotherValue); // another value and so on...
-      //      client.println("!");
       delay(50);
     }
   } else {

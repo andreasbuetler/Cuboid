@@ -18,6 +18,10 @@ float TaccelX;
 float TaccelY;
 float TaccelZ;
 
+float TgyroX;
+float TgyroY;
+float TgyroZ;
+
 float magX;
 float magY;
 float magZ;
@@ -25,6 +29,10 @@ float magZ;
 float accelX;
 float accelY;
 float accelZ;
+
+float gyroX;
+float gyroY;
+float gyroZ;
 
 boolean clientConnected = false;
 
@@ -49,6 +57,7 @@ void setup() {
 void draw() {
   readClient();
   getCalibratedValues();
+  printAllValues();
   
   background(0);
   pushMatrix();
@@ -87,6 +96,9 @@ float resetAccZ;
 float resetMagX;
 float resetMagY;
 float resetMagZ;
+float resetGyroX;
+float resetGyroY;
+float resetGyroZ;
 boolean calibratedFlag=false;
 void calibration() {
   if (calibrationCount<60) {
@@ -94,12 +106,15 @@ void calibration() {
   } else {
     if (!calibratedFlag) {
       
-      resetAccX=accelX;
-      resetAccY=accelY;
-      resetAccZ=accelZ;
-      resetMagX=magX;
-      resetMagY=magY;
-      resetMagZ=magZ;
+      resetAccX=TaccelX;
+      resetAccY=TaccelY;
+      resetAccZ=TaccelZ;
+      resetMagX=TmagX;
+      resetMagY=TmagY;
+      resetMagZ=TmagZ;
+      resetGyroX=TgyroX;
+      resetGyroY=TgyroY;
+      resetGyroZ=TgyroZ;
 
       calibratedFlag=true;
     }
@@ -114,7 +129,7 @@ void directionRotZ(){
   }else{
   directionZ="right";
   }
-  println(directionZ);
+  //println(directionZ);
 }
 
 String values="";
@@ -135,16 +150,21 @@ void readClient() {
       if (list.length>0) {
         for (int i=0; i < list.length; i ++) {
           list[i]=list[i].replaceAll("!", "");
-          if (list.length==6) {
-            TmagX=float(list[0]); // magnetometer.x
-            TmagY=float(list[1]); // magnetometer.y
-            TmagZ=float(list[2]); // magnetometer.z
+          if (list.length==9) {
+            
 
-            TaccelX=float(list[3]); // accel.x
-            TaccelY=float(list[4]); // accel.y
-            TaccelZ=float(list[5]); // accel.z
-            //valF[3]=float(list[3]); // cap sensing value
-            // valF[4]=float(list[4]); ... and so on
+            TmagX=float(list[3]); // magnetometer.x
+            TmagY=float(list[4]); // magnetometer.y
+            TmagZ=float(list[5]); // magnetometer.z
+
+            TgyroX=float(list[0]); // gyro.x
+            TgyroY=float(list[1]); // gyro.y
+            TgyroZ=float(list[2]); // gyro.z
+
+            TaccelX=float(list[6]); // accel.x
+            TaccelY=float(list[7]); // accel.y
+            TaccelZ=float(list[8]); // accel.z
+            
           }
         }
       }
@@ -168,7 +188,20 @@ void readClient() {
        magZ = TmagZ - resetMagZ;
        
        accelX = TaccelX - resetAccX;
-       accelY = TaccelY - resetAccX;
+       accelY = TaccelY - resetAccY;
        accelZ = TaccelZ - resetAccZ;
+       
+       gyroX = TgyroX - resetGyroX;
+       gyroY = TgyroY - resetGyroY;
+       gyroZ = TgyroZ - resetGyroZ;
    }
+   
+   void printAllValues(){
+     println("Magnetometer: "+"X = "+TmagX+"Y = "+TmagY+"Z = "+TmagZ);
+     println("Acceleration: "+"X = "+TaccelX+"Y = "+TaccelY+"Z = "+TaccelZ);
+     println("Gyro: "+"X = "+TgyroX+"Y = "+TgyroY+"Z = "+TgyroZ);
+   
+   }
+   
+   
   
