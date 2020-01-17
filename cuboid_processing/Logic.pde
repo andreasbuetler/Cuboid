@@ -71,7 +71,7 @@ void MovementDetection() {
 
   if (accelerationValue>chargingThresholdLow&&accelerationValue<shootThreshold) {
     //println("CHARGING");
-    if (chargingCounter<7){
+    if (chargingCounter<10){
       charging = false;
       chargingCounter++;
     }else{
