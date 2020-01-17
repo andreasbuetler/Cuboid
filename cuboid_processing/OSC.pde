@@ -17,7 +17,7 @@ void oscHandler() {
   delay(10);
    oscP5.send(value2, myRemoteLocation);
      delay(10);
-  //oscP5.send(value3, myRemoteLocation);
+  oscP5.send(value3, myRemoteLocation);
     delay(10);
   //oscP5.send(value4, myRemoteLocation);
 }

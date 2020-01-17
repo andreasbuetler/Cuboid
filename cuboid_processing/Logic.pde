@@ -1,5 +1,5 @@
 float maxBatteryLevel = 100;
-float shootThreshold = 3;
+float shootThreshold = 15;
 float accelerationValue;
 boolean shoot = false;
 float batteryLevel = 0;
@@ -7,7 +7,8 @@ boolean charging = false;
 boolean noMovement = true;
 boolean impact = false;
 float chargingThresholdLow = 0.005;
-int chargingCounter = 5;
+int chargingCounter = 100;
+float accelerationShootValue;
 
 //  void shootDetection() {
 //  if (accelerationValue >= shootThreshold) {
@@ -34,15 +35,17 @@ void batteryLevel() {
   if (batteryLevel>1) {
     batteryLevel = batteryLevel - decreaseValue;
   }
-  println(batteryLevel);
+  //println(batteryLevel);
 }
 
 void MovementDetection() {
-   println("MovementDetection()");
+   //println("MovementDetection()");
     //println("AccValue:"+accelerationValue);
     //println(accelerationValue);
-      if (accelerationValue>shootThreshold) {
-      
+    println(accelerationShootValue);
+    accelerationShootValue=accelerationShootValue*0.5+accelerationValue*0.5;
+      if (accelerationShootValue>shootThreshold) {
+      //if(batteryLevel>60){
     charging = false;
     shoot = true;
     //println(shoot);
@@ -50,15 +53,16 @@ void MovementDetection() {
     noMovement = false;
     //impact();
     //reset Chanrging Value
-    //batteryLevel = 0;
+    batteryLevel = 0;
     //oscHandler();
+      //}
   }else{
     shoot = false;
     impact = false;
   }
     
   if (accelerationValue<chargingThresholdLow) {
-    println("NO MOVEMENT");
+    //println("NO MOVEMENT");
     charging = false;
     shoot = false;
     noMovement = true;
@@ -66,7 +70,7 @@ void MovementDetection() {
   }
 
   if (accelerationValue>chargingThresholdLow&&accelerationValue<shootThreshold) {
-    println("CHARGING");
+    //println("CHARGING");
     if (chargingCounter<7){
       charging = false;
       chargingCounter++;
